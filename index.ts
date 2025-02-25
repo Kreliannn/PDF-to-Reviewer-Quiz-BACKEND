@@ -60,6 +60,16 @@ app.post("/",  (request, response)=> {
           definition:
             "Ergonomics focuses on aligning devices with human physical needs to reduce strain and improve efficiency. Examples include adjustable keyboard angles and contoured mice.",
         },
+        {
+          item: "GOMS Keystroke-Level Model (KLM)",
+          definition:
+            "A predictive model in HCI used to estimate the time it takes a user to perform tasks. It breaks actions into Goals, Operators, Methods, and Selection rules to model user behavior.",
+        },
+        {
+          item: "Ergonomics in Input Device Design",
+          definition:
+            "Ergonomics focuses on aligning devices with human physical needs to reduce strain and improve efficiency. Examples include adjustable keyboard angles and contoured mice.",
+        },
       ];
 
     response.send(data)
