@@ -112,6 +112,25 @@ app.post("/upload", upload.single('file'), async (request, response) => {
     response.send(finalResponse)
 })
 
+app.post("/test", upload.array('files'), async (request, response) => {
+
+  const allFiles = request.files as Express.Multer.File[]
+
+  const arr: string[] = [];
+
+  allFiles.forEach(async (file) => {
+    const buffer = fs.readFileSync("./uploads/" + file.filename)
+    const pdfToString = (await pdf(buffer)).text
+    arr.push(pdfToString)
+  })
+
+  const pdfTexts = arr.join("");
+
+  console.log(pdfTexts)
+
+  response.send(pdfTexts)
+})
+
 
 
 app.listen(PORT, () => console.log("express server is listening.............." + PORT))
