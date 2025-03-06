@@ -23,7 +23,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMENI_API_KEY as string);
 
 const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
-    systemInstruction : "create 10 item and defenition for my reviewer based on the given lesson add unique id. return it in json format [{id : number, item : string, defenition : string}, {id : number, item : string, defenition : string}]" 
+    systemInstruction : "create item and defenition for my reviewer based on the given lesson add unique id. return it in json format [{id : number, item : string, defenition : string}, {id : number, item : string, defenition : string}]" 
 });
 
 
@@ -113,7 +113,7 @@ app.post("/upload", upload.single('file'), async (request, response) => {
 })
 
 
-app.post("/test", upload.array('files'), async (request, response) => {
+app.post("/uploads", upload.array('files'), async (request, response) => {
 
   const allFiles = request.files as Express.Multer.File[]
 
@@ -141,6 +141,8 @@ app.post("/test", upload.array('files'), async (request, response) => {
 
   allFiles.forEach(file => fs.unlinkSync("./uploads/" + file.filename))
 
+  console.log(finalResponse)
+  
   response.send(finalResponse)
 })
 
