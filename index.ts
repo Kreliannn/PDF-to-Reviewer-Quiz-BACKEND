@@ -23,7 +23,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMENI_API_KEY as string);
 
 const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
-    systemInstruction : "create 5 item and defenition for my reviewer based on the given lesson add unique id. return it in json format [{id : number, item : string, defenition : string}, {id : number, item : string, defenition : string}]" 
+    systemInstruction : "create 10 item and defenition for my reviewer based on the given lesson add unique id. return it in json format [{id : number, item : string, defenition : string}, {id : number, item : string, defenition : string}]" 
 });
 
 
@@ -126,15 +126,22 @@ app.post("/test", upload.array('files'), async (request, response) => {
   })
 
   const results = await Promise.all(promises);
+
   arr.push(...results);
-  console.log(arr); 
 
-
+  const prompt = arr.join(" "); 
   
+  const data =  await model.generateContent(prompt)
 
-  
+  const aiResponse = data.response.text()
 
-  response.send("success")
+  const formatResponse = aiResponse.match(/\[.*\]/s);
+
+  const finalResponse = (formatResponse) ? JSON.parse(formatResponse[0]) : "";
+
+  allFiles.forEach(file => fs.unlinkSync("./uploads/" + file.filename))
+
+  response.send(finalResponse)
 })
 
 
