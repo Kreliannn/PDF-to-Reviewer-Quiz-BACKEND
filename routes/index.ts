@@ -1,10 +1,12 @@
-import { Router } from "express";  // Import Router
+import { Router } from "express";  
+import generateReviewer from "./generateReviewer"
+import test from "./test"
+import reviewer from "./reviewer"
 
 const routes = Router();
 
-// Define your routes here
-routes.get("/a", (request, response) => {
-  response.send("Welcome to the API!");
-});
+routes.use(generateReviewer)
+routes.use(test)
+routes.use(reviewer)
 
-export default routes;  // Export the router
+export default routes; 
