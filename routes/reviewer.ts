@@ -25,4 +25,10 @@ router.get("/getAllReviewers", async (request, response) => {
     response.send(data.rows)
 })
 
+router.get("/getAllReviewers/:id", async (request, response) => {
+    const { id } = request.params as { id: string };
+    const items = await query("select * from items where reviewer_id = $1", [id])
+    response.send(items.rows)
+})
+
 export default router;
