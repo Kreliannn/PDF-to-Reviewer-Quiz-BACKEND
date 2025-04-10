@@ -5,6 +5,8 @@ import multer from "multer";
 import fs from "fs"
 import pdf from "pdf-parse"
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {query} from "./database/postgre"
+import routes from "./routes/index"
 
 dotenv.config()
 
@@ -16,6 +18,8 @@ app.use(cors({
     origin: "http://localhost:3000",
     credentials : true
 }))
+
+app.use(routes)
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -79,38 +83,14 @@ app.post("/",  (request, response)=> {
         "Ergonomics focuses on aligning devices with human physical needs to reduce strain and improve efficiency. Examples include adjustable keyboard angles and contoured mice.",
     },
   ];
-  
-  console.log(data);
-  
 
-  response.send(data)
+  setTimeout(() => {  
+    response.send(data)
+  }, 8000);
+
+  
 })
 
-app.post("/upload", upload.single('file'), async (request, response) => {
-
-    if(!request.file)
-    {
-        response.send("error")
-        return
-    } 
-
-    const { file } = request
-    const buffer = fs.readFileSync("./uploads/" + file.filename)
-
-    const pdfToString = (await pdf(buffer)).text
-
-    const data =  await model.generateContent(pdfToString)
-
-    const aiResponse = data.response.text()
-
-    const formatResponse = aiResponse.match(/\[.*\]/s);
-
-    const finalResponse = (formatResponse) ? JSON.parse(formatResponse[0]) : "";
-
-    fs.unlinkSync("./uploads/" + file.filename)
-
-    response.send(finalResponse)
-})
 
 
 app.post("/uploads", upload.array('files'), async (request, response) => {
@@ -141,10 +121,10 @@ app.post("/uploads", upload.array('files'), async (request, response) => {
 
   allFiles.forEach(file => fs.unlinkSync("./uploads/" + file.filename))
 
-  console.log(finalResponse)
-  
   response.send(finalResponse)
 })
+
+
 
 
 
