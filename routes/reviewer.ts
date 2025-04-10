@@ -31,4 +31,11 @@ router.get("/getAllReviewers/:id", async (request, response) => {
     response.send(items.rows)
 })
 
+router.delete("/deleteReviewer/:id", async (request, response) => {
+    const { id } = request.params as { id: string };
+    await query("delete from items where reviewer_id = $1", [id])
+    await query("delete from reviewers where id = $1", [id])
+    response.send({message : "deleted successfully"})
+})
+
 export default router;
